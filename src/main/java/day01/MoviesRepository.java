@@ -14,16 +14,24 @@ public class MoviesRepository {
         this.dataSource = dataSource;
     }
 
-    public void saveMovie(String title, LocalDate releaseDate) {
+    public long saveMovie(String title, LocalDate releaseDate) {
+        long id;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("insert into movies (title, release_date) values (?,?)")) {
+             PreparedStatement stmt = connection.prepareStatement("insert into movies (title, release_date) values (?,?)", Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, title);
             stmt.setDate(2, Date.valueOf(releaseDate));
             stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                id = rs.getLong(1);
+            } else {
+                throw new SQLException("No key has generated");
+            }
         }
         catch (SQLException throwables) {
             throw new IllegalStateException("Cannot add", throwables);
         }
+        return id;
     }
 
     public List<Movie> findAllMovies() {

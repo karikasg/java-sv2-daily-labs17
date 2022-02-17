@@ -26,7 +26,7 @@ class ActorsRepositoryTest {
             throw new IllegalStateException("Cannot reach database", throwables);
         }
         flyway = Flyway.configure().dataSource(dataSource).load();
-        flyway.clean();
+//        flyway.clean();
         flyway.migrate();
 
         actorsRepository = new ActorsRepository(dataSource);
@@ -34,11 +34,17 @@ class ActorsRepositoryTest {
 
     @Test
     void saveActor() {
-        actorsRepository.saveActor("Jack Doe");
+        System.out.println(actorsRepository.saveActor("Jack Doe"));
+
 
     }
 
     @Test
     void findActorsWithPrefix() {
+    }
+
+    @Test
+    void findActorByName() {
+        System.out.println(actorsRepository.findActorByName("Jack Doe"));
     }
 }

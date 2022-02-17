@@ -2,8 +2,10 @@ package day01;
 
 import org.flywaydb.core.Flyway;
 import org.mariadb.jdbc.MariaDbDataSource;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
 
@@ -37,11 +39,17 @@ public class Main {
 //        System.out.println(actorsRepository.findActorsWithPrefix("J"));
 
         MoviesRepository moviesRepository = new MoviesRepository(dataSource);
-        moviesRepository.saveMovie("Titanic", LocalDate.of(1997, 12, 11));
-        moviesRepository.saveMovie("Jaws", LocalDate.of(1979, 12, 11));
-        moviesRepository.saveMovie("Star Wars", LocalDate.of(1977, 12, 11));
+        ActorsRepository actorsRepository = new ActorsRepository(dataSource);
+        ActorsMoviesRepository actorsMoviesRepository = new ActorsMoviesRepository(dataSource);
+        ActorsMoviesService service = new ActorsMoviesService(actorsRepository, moviesRepository, actorsMoviesRepository);
 
-        System.out.println(moviesRepository.findAllMovies());
+//        moviesRepository.saveMovie("Titanic", LocalDate.of(1997, 12, 11));
+//        moviesRepository.saveMovie("Jaws", LocalDate.of(1979, 12, 11));
+//        moviesRepository.saveMovie("Star Wars", LocalDate.of(1977, 12, 11));
+
+        service.insertMovieWithActors("Titanic", LocalDate.of(1997, 11, 13), List.of("Leonardo DiCaprio", "Kate Winslet"));
+        service.insertMovieWithActors("Great Gatsby", LocalDate.of(2012, 12, 11), List.of("Leonardo DiCaprio", "Tobey Maguire"));
+
 
     }
 }
