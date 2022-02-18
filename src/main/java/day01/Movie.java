@@ -6,11 +6,16 @@ public class Movie {
     private Long id;
     private String title;
     private LocalDate localDate;
+    private double rate;
 
     public Movie(Long id, String title, LocalDate localDate) {
         this.id = id;
         this.title = title;
         this.localDate = localDate;
+    }
+
+    public double getRate() {
+        return rate;
     }
 
     public Long getId() {

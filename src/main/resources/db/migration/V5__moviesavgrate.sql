@@ -1,0 +1,1 @@
+ALTER TABLE movies ADD avg_rate DOUBLE DEFAULT 0;

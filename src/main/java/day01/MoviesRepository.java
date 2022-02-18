@@ -5,6 +5,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MoviesRepository {
 
@@ -53,4 +54,21 @@ public class MoviesRepository {
         }
         return movies;
     }
+
+    public Optional<Movie> findMovieByTitle(String title) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("select * from movies where title = ?")) {
+            stmt.setString(1, title);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(new Movie(rs.getLong("id"), rs.getString("title"), rs.getDate("release_date").toLocalDate()));
+                }
+                return Optional.empty();
+            }
+        }
+        catch (SQLException sqle) {
+            throw new IllegalStateException("Cannot connect to movies", sqle);
+        }
+    }
 }
+
